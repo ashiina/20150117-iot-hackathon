@@ -15,12 +15,12 @@ Ion.calculate = function (dataObj, callback) {
 	var datas = new Array();
 	for (i=0;i<60;i++){
 		var norido = Math.random() * noridobase;
-/*		if (norido > 1.0) {
-	//		norido = 1.0;
+		if (norido > 1.0) {
+			norido = 1.0;
 		}else if (norido < 0.0) {
 			norido = 0-norido;
 		}
-*/
+
 		datetime -= 1000;
 
 		var date = new Date();
@@ -41,10 +41,10 @@ Ion.calculate = function (dataObj, callback) {
 
 Ion.initializeConnection = function() {
 	Ion.connection = mysql.createConnection({
-	  host	 : 'ion-db.cxkuby7jmoyq.us-east-1.rds.amazonaws.com', 
-	  user	 : 'ion', 
-	  password : 'developer', 
-	  database : 'iondb'
+	  host	 : '***', 
+	  user	 : '***', 
+	  password : '***', 
+	  database : '***'
 	});
 	Ion.connection.connect();
 };
@@ -78,7 +78,6 @@ Ion.readFile = function (bucket, key, callback) {
 };
 
 Ion.insertData = function(data) {
-	data.norido = DUMMY_NORIDO;
 	console.log("Inserting: "+data.norido+" / "+data.datetime);
 	Ion.connection.query("INSERT INTO `iontbl_1` SET datetime=?,temp=?,humidity=?,accx=?,accy=?,accz=?,norido=?",
 		[ data.datetime, data.temp, data.humidity, data.accx, data.accy, data.accz, data.norido],
@@ -121,25 +120,8 @@ exports.handler = function(event,context){
 	});
 };
 
-Ion.readFile = function (bucket, key, callback) {
-	var date = new Date();
-	var string = date+",24.1,46.3,0.0,0.0,0.0156";
-//	console.log(CSV);
-         var row = string.trim();
-          var data = row.split(',');
-            var dataObj = {
-                datetime: data[0],
-                temp:  data[1],
-                humidity: data[2],
-                accx: data[3],
-                accy: data[4],
-                accz:data[5]
-            };
-			console.log('Got content: ', dataObj);
-	callback(dataObj);
-}
-
 // for local node
+//---
 Ion.localRun = function(){
 	Ion.initializeConnection();
 	Ion.readFile('', '', function(dataObj){
@@ -162,10 +144,8 @@ Ion.localRun = function(){
 };
 
 var DUMMY_NORIDO = process.argv[2];
-//var CSV = process.argv[2];
-
 Ion.localRun();
-
+//---
 
 
 
